@@ -25,20 +25,24 @@ class TrelloApi(val key: String, val token: String)(implicit val actorSystem: Ac
   implicit val formats: Formats = DefaultFormats
   implicit val jacksonSerialization: Serialization = jackson.Serialization
 
-  def member(id: String)(implicit ec: ExecutionContext) : Future[Member] = {
-    request[Member](s"/1/members/$id")
+  def member(memberId: String)(implicit ec: ExecutionContext) : Future[Member] = {
+    request[Member](s"/1/members/$memberId")
   }
 
-  def board(id: String)(implicit ec: ExecutionContext) : Future[Board] = {
-    request[Board](s"/1/boards/$id")
+  def board(boardId: String)(implicit ec: ExecutionContext) : Future[Board] = {
+    request[Board](s"/1/boards/$boardId")
   }
 
-  def cards(id: String)(implicit ec: ExecutionContext) : Future[Seq[Card]] = {
-    request[Seq[Card]](s"/1/boards/$id/cards")
+  def cards(boardId: String)(implicit ec: ExecutionContext) : Future[Seq[Card]] = {
+    request[Seq[Card]](s"/1/boards/$boardId/cards")
   }
 
-  def card(id: String)(implicit ec: ExecutionContext) : Future[Card] = {
-    request[Card](s"/1/cards/$id")
+  def card(cardId: String)(implicit ec: ExecutionContext) : Future[Card] = {
+    request[Card](s"/1/cards/$cardId")
+  }
+
+  def checklists(cardId: String)(implicit ex: ExecutionContext) : Future[Seq[Checklist]] = {
+    request[Seq[Checklist]](s"/1/cards/$cardId/checklists")
   }
 
   private def request[T](path: String, params: Map[String, String] = Map())(implicit ec: ExecutionContext, unmarshaller: Unmarshaller[ResponseEntity, T]) : Future[T] = {
