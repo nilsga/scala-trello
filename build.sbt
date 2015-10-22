@@ -2,7 +2,7 @@ organization := "com.github.nilsga"
 
 name := "scala-trello"
 
-version := "1.0-SNAPSHOT"
+version := "0.1"
 
 val akkaVersion = "2.4.0"
 val akkaHttpVersion = "1.0"
