@@ -25,32 +25,32 @@ class TrelloApi(val key: String, val token: String)(implicit val actorSystem: Ac
   implicit val formats: Formats = DefaultFormats
   implicit val jacksonSerialization: Serialization = jackson.Serialization
 
-  def member(memberId: String)(implicit ec: ExecutionContext) : Future[Member] = {
-    request[Member](s"/1/members/$memberId")
+  def member(memberId: String, params: Map[String, String] = Map())(implicit ec: ExecutionContext) : Future[Member] = {
+    request[Member](s"/1/members/$memberId", params)
   }
 
-  def board(boardId: String)(implicit ec: ExecutionContext) : Future[Board] = {
-    request[Board](s"/1/boards/$boardId")
+  def board(boardId: String, params: Map[String, String] = Map())(implicit ec: ExecutionContext) : Future[Board] = {
+    request[Board](s"/1/boards/$boardId", params)
   }
 
-  def cards(boardId: String)(implicit ec: ExecutionContext) : Future[Seq[Card]] = {
-    request[Seq[Card]](s"/1/boards/$boardId/cards")
+  def cards(boardId: String, params: Map[String, String] = Map())(implicit ec: ExecutionContext) : Future[Seq[Card]] = {
+    request[Seq[Card]](s"/1/boards/$boardId/cards", params)
   }
 
-  def card(cardId: String)(implicit ec: ExecutionContext) : Future[Card] = {
-    request[Card](s"/1/cards/$cardId")
+  def card(cardId: String, params: Map[String, String] = Map())(implicit ec: ExecutionContext) : Future[Card] = {
+    request[Card](s"/1/cards/$cardId", params)
   }
 
-  def lists(boardId: String)(implicit ec: ExecutionContext): Future[Seq[BoardList]] = {
-    request[Seq[BoardList]](s"/1/boards/$boardId/lists")
+  def lists(boardId: String, params: Map[String, String] = Map())(implicit ec: ExecutionContext): Future[Seq[BoardList]] = {
+    request[Seq[BoardList]](s"/1/boards/$boardId/lists", params)
   }
 
-  def cardsForList(listId: String)(implicit ec: ExecutionContext) : Future[Seq[Card]] = {
-    request[Seq[Card]](s"/1/lists/$listId/cards")
+  def cardsForList(listId: String, params: Map[String, String] = Map())(implicit ec: ExecutionContext) : Future[Seq[Card]] = {
+    request[Seq[Card]](s"/1/lists/$listId/cards", params)
   }
 
-  def checklists(cardId: String)(implicit ec: ExecutionContext) : Future[Seq[Checklist]] = {
-    request[Seq[Checklist]](s"/1/cards/$cardId/checklists")
+  def checklists(cardId: String, params: Map[String, String] = Map())(implicit ec: ExecutionContext) : Future[Seq[Checklist]] = {
+    request[Seq[Checklist]](s"/1/cards/$cardId/checklists", params)
   }
 
   private def request[T](path: String, params: Map[String, String] = Map())(implicit ec: ExecutionContext, unmarshaller: Unmarshaller[ResponseEntity, T]) : Future[T] = {

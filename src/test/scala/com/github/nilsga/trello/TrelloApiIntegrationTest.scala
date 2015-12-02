@@ -39,6 +39,13 @@ class TrelloApiIntegrationTest extends WordSpec with Matchers {
       list.name should be("Integration tests")
     }
 
+    "Get lists for board, with parameters" in {
+      val lists = Await.result(api.lists("5618cf5e0c80b6fd6b667971", Map("cards" -> "open")), 10 seconds)
+      lists.length should be(1)
+      val list = lists.head
+      list.cards.length should be(1)
+    }
+
     "Get cards for list" in {
       val cards = Await.result(api.cardsForList("5618cf63b04b8ce7bea66f17"), 10 seconds)
       cards.length should be(1)
