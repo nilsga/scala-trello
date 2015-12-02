@@ -45,7 +45,11 @@ class TrelloApi(val key: String, val token: String)(implicit val actorSystem: Ac
     request[Seq[BoardList]](s"/1/boards/$boardId/lists")
   }
 
-  def checklists(cardId: String)(implicit ex: ExecutionContext) : Future[Seq[Checklist]] = {
+  def cardsForList(listId: String)(implicit ec: ExecutionContext) : Future[Seq[Card]] = {
+    request[Seq[Card]](s"/1/lists/$listId/cards")
+  }
+
+  def checklists(cardId: String)(implicit ec: ExecutionContext) : Future[Seq[Checklist]] = {
     request[Seq[Checklist]](s"/1/cards/$cardId/checklists")
   }
 
