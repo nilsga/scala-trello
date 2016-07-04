@@ -3,9 +3,11 @@ package com.github.nilsga.trello
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.StatusCodes.OK
+import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.model.{HttpRequest, ResponseEntity, Uri}
 import akka.http.scaladsl.unmarshalling.{Unmarshal, Unmarshaller}
 import akka.stream.ActorMaterializer
+import akka.stream.scaladsl.Sink
 import com.github.nilsga.trello.TrelloModel._
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 import org.json4s.{DefaultFormats, Formats, Serialization, jackson}
@@ -57,13 +59,16 @@ class TrelloApi(val key: String, val token: String)(implicit val actorSystem: Ac
     Http().singleRequest(HttpRequest(uri = uri(path, params))).flatMap(resp => {
       resp.status match {
         case OK => Unmarshal(resp.entity).to[T]
-        case _ => Unmarshal(resp.entity).to[String].flatMap(entity => Future.failed(new RuntimeException(entity)))
+        case _ =>
+          val status = resp.status
+          resp.entity.dataBytes.runWith(Sink.ignore)
+          Future.failed(new RuntimeException(s"Request failed with status ${status.reason}"))
       }
     })
   }
 
   private def uri(path: String, params: Map[String, String]) = defaultUri
     .withPath(Uri.Path(path))
-    .withQuery(defaultParams ++ params)
+    .withQuery(Query(defaultParams ++ params))
 
 }
